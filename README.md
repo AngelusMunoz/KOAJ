@@ -1,5 +1,21 @@
 # KOAJ — Pipeline ETL y Análisis Comercial
 
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-2.x-150458?logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-2.x-013243?logo=numpy&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power%20BI-Desktop-F2C811?logo=powerbi&logoColor=black)
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626?logo=jupyter&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.x-D71F00?logo=sqlalchemy&logoColor=white)
+
+![Estado](https://img.shields.io/badge/Estado-Completado-success)
+![Versión](https://img.shields.io/badge/Versión-1.0-blue)
+![Licencia](https://img.shields.io/badge/Licencia-MIT-green)
+
+
+<img width="1656" height="950" alt="image" src="https://github.com/user-attachments/assets/6152c08e-dd43-4fc2-bbe8-399cdd77a022" />
+
+
 Proyecto académico de análisis de datos orientado a la construcción de un flujo completo de **extracción, transformación, validación, modelado y carga de datos**, seguido de su explotación en **PostgreSQL y Power BI**.
 
 El proyecto parte de un archivo CSV con información transaccional de ventas de KOAJ y desarrolla un proceso reproducible mediante Python y Jupyter Notebooks. Los datos son limpiados y estructurados en un modelo dimensional, almacenados en PostgreSQL y finalmente utilizados en un dashboard interactivo de Power BI.
@@ -56,7 +72,6 @@ KOAJ/
 │   └── 04_CargarSQL.ipynb        # Creación y carga de PostgreSQL
 │
 └── doc/
-    ├── Documento_Diseño_Software_KOAJ.docx
     ├── Esquema Pipeline.pdf
     └── KOAJ.pbix                  # Dashboard de Power BI
 ```
@@ -345,6 +360,34 @@ doc/KOAJ.pbix
 
 El dashboard permite analizar el comportamiento comercial mediante filtros y medidas DAX.
 
+## Dimensión de fechas en Power BI
+
+Para facilitar el análisis temporal y las comparaciones entre períodos, se creó
+una dimensión de fechas independiente dentro de Power BI.
+
+La tabla se generó mediante `CALENDARAUTO()`, tomando como referencia las fechas
+presentes en el modelo.
+
+### Creación de la tabla
+
+```DAX
+DimFecha = CALENDARAUTO()
+```
+
+### Creación de columnas de la tabla
+
+```DAX
+Año = YEAR('DimFecha'[Date])
+
+Trimestre = "T" & QUARTER('DimFecha'[Date])
+
+Mes = FORMAT('DimFecha'[Date], "MMMM")
+
+DiaNombre = FORMAT('DimFecha'[Date], "dddd")
+
+Dia = FORMAT('DimFecha'[Date], "d")
+```
+
 ### Principales indicadores
 
 - **Ventas Netas**
@@ -542,7 +585,6 @@ La carpeta `doc/` contiene los documentos asociados al proyecto:
 
 | Archivo | Descripción |
 |---|---|
-| `Documento_Diseño_Software_KOAJ.docx` | Documento de diseño del sistema |
 | `Esquema Pipeline.pdf` | Representación del flujo del proceso |
 | `KOAJ.pbix` | Dashboard interactivo de Power BI |
 

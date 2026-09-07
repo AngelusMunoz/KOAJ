@@ -1,0 +1,27 @@
+id_producto,nombre_producto,categoria,tipo_prenda
+P0001,Pantalón Clásico,Pantalones,Pantalón
+P0002,Set Deportivo,Deportivo,Conjunto
+P0003,Jean Mom,Jeans,Pantalón
+P0004,Jean Skinny,Jeans,Pantalón
+P0005,Falda,Faldas,Falda
+P0006,Cinturón,Accesorios,Accesorio
+P0007,Gorra,Accesorios,Accesorio
+P0008,Chaqueta Bomber,Chaquetas,Chaqueta
+P0009,Camisa Casual,Camisas,Camisa
+P0010,Short,Shorts,Short
+P0011,Buzo Básico,Buzos,Buzo
+P0012,Blusa,Blusas,Blusa
+P0013,Bolso,Accesorios,Accesorio
+P0014,Jogger,Pantalones,Pantalón
+P0015,Jean Straight,Jeans,Pantalón
+P0016,Pantalón Cargo,Pantalones,Pantalón
+P0017,Vestido Casual,Vestidos,Vestido
+P0018,Camiseta Básica,Camisetas,Camiseta
+P0019,Top,Tops,Top
+P0020,Camiseta Estampada,Camisetas,Camiseta
+P0021,Polo,Camisas,Polo
+P0022,Tenis Casuales,Calzado,Calzado
+P0023,Camiseta Oversize,Camisetas,Camiseta
+P0024,Chaqueta Denim,Chaquetas,Chaqueta
+P0025,Vestido Corto,Vestidos,Vestido
+P0026,Buzo Con Capucha,Buzos,Buzo

@@ -1,0 +1,44 @@
+id_tienda,nombre_tienda,ciudad,departamento,empresa
+T001,Koaj Premium Plaza,Medellín,Antioquia,KOAJ
+T002,Koaj Multicentro,Ibagué,Tolima,KOAJ
+T003,Koaj Ocean Mall,Santa Marta,Magdalena,KOAJ
+T004,Koaj Unicentro,Armenia,Quindío,KOAJ
+T005,Koaj Viva Sincelejo,Sincelejo,Sucre,KOAJ
+T006,Koaj Único,Pasto,Nariño,KOAJ
+T007,Koaj San Pedro Plaza,Neiva,Huila,KOAJ
+T008,Koaj Gran Estación,Bogotá,Bogotá D.C.,KOAJ
+T009,Koaj Buenavista,Montería,Córdoba,KOAJ
+T010,Koaj Terraplaza,Popayán,Cauca,KOAJ
+T011,Koaj Santa Fe,Medellín,Antioquia,KOAJ
+T012,Koaj Chipichape,Cali,Valle Del Cauca,KOAJ
+T013,Koaj Caracolí,Bucaramanga,Santander,KOAJ
+T014,Koaj La Estación,Ibagué,Tolima,KOAJ
+T015,Koaj Wajira,Riohacha,La Guajira,KOAJ
+T016,Koaj Guacarí,Sincelejo,Sucre,KOAJ
+T017,Koaj Titán Plaza,Bogotá,Bogotá D.C.,KOAJ
+T018,Koaj Mall Plaza,Cartagena,Bolívar,KOAJ
+T019,Koaj Primavera Urbana,Villavicencio,Meta,KOAJ
+T020,Koaj Salitre Plaza,Bogotá,Bogotá D.C.,KOAJ
+T021,Koaj Mallplaza,Manizales,Caldas,KOAJ
+T022,Koaj Portal Del Prado,Barranquilla,Atlántico,KOAJ
+T023,Koaj Jardín Plaza,Cali,Valle Del Cauca,KOAJ
+T024,Koaj La Quinta,Bucaramanga,Santander,KOAJ
+T025,Koaj El Tesoro,Medellín,Antioquia,KOAJ
+T026,Koaj Portal Del Quindío,Armenia,Quindío,KOAJ
+T027,Koaj Los Molinos,Medellín,Antioquia,KOAJ
+T028,Koaj Ventura Plaza,Cúcuta,Norte De Santander,KOAJ
+T029,Koaj Cosmocentro,Cali,Valle Del Cauca,KOAJ
+T030,Koaj Cacique,Bucaramanga,Santander,KOAJ
+T031,Koaj Campanario,Popayán,Cauca,KOAJ
+T032,Koaj La Castellana,Cartagena,Bolívar,KOAJ
+T033,Koaj Parque Arboleda,Pereira,Risaralda,KOAJ
+T034,Koaj Viva Barranquilla,Barranquilla,Atlántico,KOAJ
+T035,Koaj Mayorca,Medellín,Antioquia,KOAJ
+T036,Koaj Caribe Plaza,Cartagena,Bolívar,KOAJ
+T037,Koaj Fundadores,Manizales,Caldas,KOAJ
+T038,Koaj Plaza Central,Bogotá,Bogotá D.C.,KOAJ
+T039,Koaj Alamedas,Montería,Córdoba,KOAJ
+T040,Koaj Andino,Bogotá,Bogotá D.C.,KOAJ
+T041,Koaj Mayales,Valledupar,Cesar,KOAJ
+T042,Koaj Guatapurí,Valledupar,Cesar,KOAJ
+T043,Koaj Victoria,Pereira,Risaralda,KOAJ

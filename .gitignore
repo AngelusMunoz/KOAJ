@@ -1,0 +1,24 @@
+# Env
+.env
+
+# Python
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (archivos generados)
+data/raw/
+data/processed/
+
+# Power BI
+*.pbix
+
+# OS
+.DS_Store
+Thumbs.db

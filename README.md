@@ -1,319 +1,562 @@
-# KOAJ Sales Data Pipeline
+# KOAJ — Pipeline ETL y Análisis Comercial
 
-## Project Overview
+Proyecto académico de análisis de datos orientado a la construcción de un flujo completo de **extracción, transformación, validación, modelado y carga de datos**, seguido de su explotación en **PostgreSQL y Power BI**.
 
-End-to-end ETL pipeline for KOAJ (Colombian fashion retailer) sales data. The project extracts raw transactional data, transforms it using Python/pandas, loads it into PostgreSQL following a star schema, and delivers an interactive Power BI dashboard answering 5 key business questions.
+El proyecto parte de un archivo CSV con información transaccional de ventas de KOAJ y desarrolla un proceso reproducible mediante Python y Jupyter Notebooks. Los datos son limpiados y estructurados en un modelo dimensional, almacenados en PostgreSQL y finalmente utilizados en un dashboard interactivo de Power BI.
 
-**Dataset:** 6,000 sales transactions from KOAJ stores across Colombian cities (2023-2025).
+## Objetivo
 
----
+Construir una solución de datos que permita transformar información de ventas en una estructura preparada para análisis comercial y responder preguntas de negocio relacionadas con:
 
-## Tech Stack
+- evolución de las ventas;
+- categorías con mayor participación;
+- distribución geográfica de las ventas;
+- comparación interanual y mensual;
+- relación entre precio y cantidad vendida.
 
-| Layer | Technology |
+## Tecnologías
+
+| Tecnología | Uso |
 |---|---|
-| Extraction | Python 3.10+, pandas |
-| Transformation | pandas, numpy |
-| Storage | PostgreSQL 14+ |
-| Business Intelligence | Power BI Desktop |
-| Environment | python-dotenv, virtualenv |
+| Python 3.10+ | Lenguaje principal del procesamiento |
+| Jupyter Notebook | Ejecución documentada del proceso ETL |
+| Pandas | Manipulación, limpieza y transformación de datos |
+| NumPy | Operaciones y transformaciones numéricas |
+| python-dotenv | Lectura de variables de entorno |
+| SQLAlchemy | Conexión y operaciones con PostgreSQL |
+| PostgreSQL 14+ | Base de datos relacional |
+| Power BI Desktop | Modelado analítico y visualización |
+| DAX | Cálculo de indicadores y análisis temporal |
 
----
-
-## Project Structure
+## Estructura del proyecto
 
 ```text
 KOAJ/
-├── .env                          # Database credentials (not tracked)
-├── .gitignore                    # Git ignore rules
-├── requirements.txt              # Python dependencies
+│
+├── .env.example                  # Plantilla de configuración de PostgreSQL
+├── .gitignore                    # Archivos excluidos de control de versiones
+├── requirements.txt              # Dependencias de Python
+├── README.md                     # Documentación del proyecto
+│
 ├── data/
-│   ├── raw/                      # Original raw CSV
-│   └── processed/                # Cleaned & transformed CSVs
+│   ├── raw/
+│   │   └── ventas_raw.csv        # Dataset original
+│   │
+│   └── processed/
+│       ├── ventas_limpio.csv     # Dataset después de la limpieza
+│       ├── fact_ventas.csv       # Tabla de hechos
+│       ├── dim_cliente.csv       # Dimensión de clientes
+│       ├── dim_producto.csv      # Dimensión de productos
+│       └── dim_tienda.csv        # Dimensión de tiendas
+│
 ├── notebooks/
-│   ├── 01_Exploracion.ipynb      # Data exploration & profiling
-│   ├── 02_Limpieza.ipynb         # Data cleaning & validation
-│   ├── 03_Normalizacion.ipynb    # Star schema modeling
-│   └── 04_CargarSQL.ipynb        # PostgreSQL load & verification
-├── docs/
-│   ├── GUIA_DASHBOARD.md         # Step-by-step Power BI guide
-│   └── Simulacro_Prueba_Desempeno_RIWI.md
-└── powerbi/
-    └── dashboard_koaj.pbix       # Interactive dashboard
+│   ├── 01_Exploracion.ipynb      # Exploración y perfilado inicial
+│   ├── 02_Limpieza.ipynb         # Limpieza y validación
+│   ├── 03_Normalizacion.ipynb    # Normalización y modelo dimensional
+│   └── 04_CargarSQL.ipynb        # Creación y carga de PostgreSQL
+│
+└── doc/
+    ├── Documento_Diseño_Software_KOAJ.docx
+    ├── Esquema Pipeline.pdf
+    └── KOAJ.pbix                  # Dashboard de Power BI
 ```
 
----
+> Los archivos de credenciales reales (`.env`) no deben publicarse en repositorios. Se debe utilizar `.env.example` como plantilla.
 
-## Setup & Installation
+## Requisitos previos
 
-### Prerequisites
+Antes de ejecutar el proyecto se necesita tener instalado:
 
-- Python 3.10+
-- PostgreSQL 14+ (running on localhost:5432)
-- Power BI Desktop
+1. **Python 3.10 o superior**
+2. **PostgreSQL 14 o superior**
+3. **Power BI Desktop** para abrir el dashboard
+4. **Git** si el proyecto se obtiene desde un repositorio
 
-### Steps
+La versión de PostgreSQL indicada corresponde al entorno utilizado para el proyecto. Versiones posteriores pueden funcionar, pero no forman parte del entorno originalmente documentado.
+
+## Instalación
+
+### 1. Clonar el repositorio
 
 ```bash
-# 1. Clone the repository
-git clone <repository-url>
+git clone <URL_DEL_REPOSITORIO>
 cd KOAJ
-
-# 2. Create virtual environment
-python -m venv env
-
-# Windows
-env\Scripts\activate
-
-# Linux/Mac
-source env/bin/activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Configure database credentials
-# Edit .env with your PostgreSQL credentials
 ```
 
-### Database Configuration
+Si el proyecto ya se encuentra descargado localmente, este paso no es necesario.
 
-Edit `.env`:
+### 2. Crear el entorno virtual
 
-```text
-MI_CONTRA=your_password_here
+#### Windows
+
+```powershell
+python -m venv env
+env\Scripts\activate
+```
+
+#### Linux / macOS
+
+```bash
+python3 -m venv env
+source env/bin/activate
+```
+
+Cuando el entorno esté activo, el terminal normalmente mostrará `(env)` al inicio de la línea.
+
+### 3. Actualizar pip
+
+```bash
+python -m pip install --upgrade pip
+```
+
+### 4. Instalar las dependencias
+
+```bash
+pip install -r requirements.txt
+```
+
+El archivo `requirements.txt` contiene las versiones de las dependencias del entorno utilizado para ejecutar los notebooks.
+
+### 5. Verificar las instalaciones principales
+
+```bash
+python --version
+pip --version
+```
+
+También puede comprobarse que las librerías principales estén disponibles:
+
+```bash
+python -c "import pandas, numpy, dotenv, sqlalchemy; print('Dependencias principales instaladas correctamente')"
+```
+
+## Configuración de PostgreSQL
+
+El notebook `04_CargarSQL.ipynb` utiliza variables de entorno para establecer la conexión con PostgreSQL.
+
+### 1. Crear la base de datos
+
+Desde **pgAdmin** o desde `psql`, crear la base de datos que se utilizará para el proyecto.
+
+Ejemplo:
+
+```sql
+CREATE DATABASE koaj_ventas;
+```
+
+### 2. Crear el archivo `.env`
+
+Copiar `.env.example` y renombrarlo como `.env`.
+
+#### Windows PowerShell
+
+```powershell
+Copy-Item .env.example .env
+```
+
+#### Linux / macOS
+
+```bash
+cp .env.example .env
+```
+
+Después, editar `.env` con los valores reales de la instalación local:
+
+```env
+MI_CONTRA=tu_contraseña
 DB_USER=postgres
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=koaj_ventas
 ```
 
----
+El archivo `.env` es utilizado por `04_CargarSQL.ipynb` mediante `python-dotenv`.
 
-## Pipeline Execution
+## Ejecución del pipeline
 
-Run the notebooks in this order:
+Los notebooks deben ejecutarse **en el orden indicado**, ya que cada etapa utiliza los resultados generados por la anterior.
 
-| Step | Notebook | Purpose |
-|---|---|---|
-| 1 | `01_Exploracion.ipynb` | Profile data and identify quality issues |
-| 2 | `02_Limpieza.ipynb` | Clean nulls, fix types, remove duplicates and validate |
-| 3 | `03_Normalizacion.ipynb` | Build the star schema |
-| 4 | `04_CargarSQL.ipynb` | Load tables into PostgreSQL and verify the load |
+### 01 — Exploración
 
----
+`notebooks/01_Exploracion.ipynb`
 
-## Data Model
+Objetivo:
 
-The project uses a simple star schema:
+- conocer la estructura del dataset;
+- revisar tipos de datos;
+- identificar valores nulos;
+- detectar duplicados;
+- revisar valores únicos y rangos;
+- identificar posibles problemas de calidad.
 
-```text
-                    ┌───────────────┐
-                    │ dim_producto  │
-                    │ PK id_producto│
-                    └───────┬───────┘
-                            │
-┌───────────────┐     ┌─────▼─────┐     ┌───────────────┐
-│ dim_cliente   ├────►│fact_ventas│◄────┤  dim_tienda   │
-│ PK id_cliente │     │            │     │ PK id_tienda  │
-└───────────────┘     └────────────┘     └───────────────┘
-```
+### 02 — Limpieza
 
-The fact table contains the transactional information, while the dimensions provide descriptive attributes for analysis.
+`notebooks/02_Limpieza.ipynb`
 
-| Table | Description |
-|---|---|
-| `fact_ventas` | Sales lines, transaction keys and numeric measures; one row = one product line within a purchase |
-| `dim_producto` | Product, category and garment information |
-| `dim_cliente` | Customer profile information |
-| `dim_tienda` | Store, city and department information |
+Objetivo:
 
----
+- corregir tipos de datos;
+- tratar valores faltantes;
+- detectar y eliminar duplicados;
+- validar rangos y valores;
+- generar el dataset limpio.
 
-
----
-
-## Granularidad de los datos
-
-El dataset RAW y la tabla `fact_ventas` trabajan a nivel de **línea de venta**.
-
-> **Una fila representa un producto dentro de una compra/transacción.**
-
-La lógica de los identificadores es:
+Salida principal:
 
 ```text
-id_venta        → identifica la compra completa
-numero_linea    → identifica la línea del producto dentro de esa compra
-id_producto     → identifica el producto vendido
-cantidad        → unidades vendidas en esa línea
-precio_unitario → precio por unidad
-descuento       → descuento aplicado a esa línea
+data/processed/ventas_limpio.csv
 ```
 
-Una compra puede tener varias filas. Para todas las líneas de una misma `id_venta`, `fecha_venta`, `id_cliente` e `id_tienda` se mantienen consistentes.
+### 03 — Normalización
 
-Por lo tanto:
-- Filas de `fact_ventas` = líneas de venta.
-- `id_venta` = compra/transacción.
-- `cantidad` = unidades vendidas.
-- `id_venta + numero_linea` = clave de una línea de venta después de limpiar duplicados.
+`notebooks/03_Normalizacion.ipynb`
 
-Para contar compras no se deben contar filas. Se utiliza:
+Objetivo:
+
+- separar atributos descriptivos y transaccionales;
+- construir las dimensiones;
+- construir la tabla de hechos;
+- preparar el modelo dimensional para PostgreSQL y Power BI.
+
+Salidas principales:
+
+```text
+data/processed/dim_cliente.csv
+data/processed/dim_producto.csv
+data/processed/dim_tienda.csv
+data/processed/fact_ventas.csv
+```
+
+### 04 — Carga a PostgreSQL
+
+`notebooks/04_CargarSQL.ipynb`
+
+Objetivo:
+
+- conectarse a PostgreSQL;
+- crear las tablas;
+- definir claves primarias y foráneas;
+- cargar las dimensiones;
+- cargar la tabla de hechos;
+- comprobar que la carga se realizó correctamente.
+
+El notebook crea las siguientes tablas:
+
+```text
+dim_producto
+dim_cliente
+dim_tienda
+fact_ventas
+```
+
+Las dimensiones se cargan antes que la tabla de hechos para respetar las claves foráneas.
+
+## Modelo de datos
+
+La base de datos utiliza un esquema dimensional tipo **estrella**.
+
+```text
+                         dim_producto
+                              │
+                              │
+                              ▼
+                        fact_ventas
+                         ▲      ▲
+                         │      │
+                         │      │
+                dim_cliente   dim_tienda
+```
+
+### `fact_ventas`
+
+Tabla central del modelo. Contiene la información transaccional de las líneas de venta.
+
+Una fila representa **un producto dentro de una compra/transacción**.
+
+Clave primaria compuesta:
+
+```text
+(id_venta, numero_linea)
+```
+
+Principales campos:
+
+- `id_venta`
+- `numero_linea`
+- `fecha_venta`
+- `id_cliente`
+- `id_producto`
+- `id_tienda`
+- `cantidad`
+- `precio_unitario`
+- `descuento`
+- `metodo_pago`
+- `canal`
+- `temporada`
+- `talla`
+
+### `dim_producto`
+
+Contiene información descriptiva de los productos.
+
+Clave primaria:
+
+```text
+id_producto
+```
+
+### `dim_cliente`
+
+Contiene información descriptiva asociada al cliente.
+
+Clave primaria:
+
+```text
+id_cliente
+```
+
+### `dim_tienda`
+
+Contiene información relacionada con las tiendas y su ubicación.
+
+Clave primaria:
+
+```text
+id_tienda
+```
+
+### Relaciones
+
+```text
+dim_producto.id_producto  ───► fact_ventas.id_producto
+dim_cliente.id_cliente    ───► fact_ventas.id_cliente
+dim_tienda.id_tienda      ───► fact_ventas.id_tienda
+```
+
+La dimensión de fechas utilizada para el análisis temporal se encuentra implementada en **Power BI** (`DimFecha`).
+
+## Power BI
+
+El archivo del dashboard se encuentra en:
+
+```text
+doc/KOAJ.pbix
+```
+
+El dashboard permite analizar el comportamiento comercial mediante filtros y medidas DAX.
+
+### Principales indicadores
+
+- **Ventas Netas**
+- **Número de Ventas**
+- **Unidades Vendidas**
+- **Ticket Promedio**
+- **Ventas Año Anterior**
+- **Variación Interanual %**
+- **Variación Mensual %**
+
+### Medidas principales
 
 ```DAX
 Numero de Ventas =
 DISTINCTCOUNT(fact_ventas[id_venta])
 ```
 
-## Main Metrics
+```DAX
+Unidades Vendidas =
+SUM(fact_ventas[cantidad])
+```
 
-The dashboard uses measures based on the sales fact table.
+```DAX
+Ventas Netas =
+SUMX(
+    fact_ventas,
+    fact_ventas[cantidad]
+        * fact_ventas[precio_unitario]
+        * (1 - fact_ventas[descuento])
+)
+```
 
-| Metric | Purpose |
-|---|---|
-| **Ventas Netas** | Total revenue after applying discounts |
-| **Unidades Vendidas** | Total units sold |
-| **Número de Ventas** | Distinct sales/orders |
-| **Ticket Promedio** | Average value per sale |
-| **Ventas Año Anterior** | Previous-year comparison |
-| **Variación Ventas %** | Percentage change versus the previous year |
+```DAX
+Ticket Promedio =
+DIVIDE([Ventas Netas], [Numero de Ventas], 0)
+```
 
----
+```DAX
+Ventas Año Anterior =
+CALCULATE(
+    [Ventas Netas],
+    SAMEPERIODLASTYEAR(DimFecha[Date])
+)
+```
 
-# Business Questions
+```DAX
+Ventas Mes Anterior =
+CALCULATE(
+    [Ventas Netas],
+    DATEADD(DimFecha[Date], -1, MONTH)
+)
+```
 
-The Power BI dashboard is designed to answer the five business questions required by the performance test.
+```DAX
+Variacion Interanual % =
+DIVIDE(
+    [Ventas Netas] - [Ventas Año Anterior],
+    [Ventas Año Anterior],
+    0
+)
+```
 
-## Q1. Tendencia temporal
+```DAX
+Variacion Mensual % =
+DIVIDE(
+    [Ventas Netas] - [Ventas Mes Anterior],
+    [Ventas Mes Anterior],
+    0
+)
+```
 
-**¿Cómo han evolucionado las ventas netas de KOAJ entre 2023 y 2025?**
+## Preguntas de negocio
 
-The objective is to identify the monthly or quarterly evolution of the main business metric and detect periods of growth, decline or seasonality.
+El dashboard fue construido para responder las siguientes preguntas:
 
-**Recommended visual:** line chart.
+### 1. Evolución de ventas
 
----
+**¿Cómo han evolucionado las ventas netas entre 2023 y 2025?**
 
-## Q2. Top 5 categorías
+Permite identificar tendencias y cambios a lo largo del tiempo.
 
-**¿Cuáles son las cinco categorías de productos que generan mayores ventas netas?**
+### 2. Categorías principales
 
-The objective is to identify the categories that contribute the most to total revenue and evaluate whether sales are concentrated in a small number of categories.
+**¿Cuáles son las categorías que generan mayores ventas netas?**
 
-**Recommended visual:** horizontal Top 5 bar chart.
+Permite identificar las categorías con mayor contribución al ingreso.
 
----
+### 3. Distribución geográfica
 
-## Q3. Distribución y concentración geográfica
+**¿Cómo se distribuyen las ventas entre las ciudades?**
 
-**¿Cómo se distribuyen las ventas netas entre las ciudades y qué nivel de concentración existe?**
+Permite identificar mercados con mayor participación y concentración geográfica.
 
-The objective is to identify the cities with the highest sales contribution and determine whether the business is highly concentrated in a few geographic markets.
+### 4. Variación interanual
 
-**Recommended visual:** horizontal bar chart by city, optionally supported by a Pareto-style analysis.
+**¿Cuál es la variación porcentual de las ventas frente al año anterior?**
 
----
+Permite evaluar crecimiento o disminución de las ventas en períodos comparables.
 
-## Q4. Comparación entre periodos
-
-**¿Cuál fue la variación porcentual de las ventas netas frente al año anterior?**
-
-The objective is to compare equivalent periods and determine whether KOAJ is growing or decreasing over time.
-
-**Recommended visual:** KPI/card with percentage variation, supported by a year or monthly comparison.
-
----
-
-## Q5. Relación entre variables
+### 5. Relación precio-cantidad
 
 **¿Existe una relación observable entre el precio unitario y la cantidad vendida?**
 
-The objective is to explore whether higher-priced products tend to sell fewer units and whether the relationship provides a useful commercial insight.
+Permite explorar el comportamiento de la demanda frente a diferentes niveles de precio.
 
-**Recommended visual:** scatter plot.
-
----
-
-## Dashboard Requirements
-
-The dashboard should include at least:
-
-- 1 summary KPI/card
-- 1 temporal trend chart
-- 1 Top-N/ranking chart
-- 1 distribution chart
-- 1 interactive slicer/filter
-
-These elements directly correspond to the requirements of the performance test.
-
----
-
-## Expected Insights
-
-The analysis should not invent conclusions before looking at the final data.
-
-For each business question, use this structure:
+## Flujo completo de la solución
 
 ```text
-DATA
-  ↓
-INTERPRETATION
-  ↓
-BUSINESS DECISION
+                 DATOS RAW
+                    │
+                    ▼
+          Exploración y perfilado
+                    │
+                    ▼
+             Limpieza y validación
+                    │
+                    ▼
+          Normalización / Modelo estrella
+                    │
+                    ▼
+               PostgreSQL
+                    │
+                    ▼
+                 Power BI
+                    │
+                    ▼
+          Indicadores + visualizaciones
+                    │
+                    ▼
+             Análisis de negocio
 ```
 
-Example:
+## Recomendaciones para ejecutar correctamente el proyecto
 
-> A city represents a high percentage of total sales.
+- Ejecutar los cuatro notebooks en orden.
+- Mantener activa la carpeta del proyecto como directorio de trabajo.
+- Verificar que PostgreSQL esté iniciado antes de ejecutar `04_CargarSQL.ipynb`.
+- Confirmar que `.env` contenga las credenciales correctas.
+- No modificar las rutas de `data/raw` y `data/processed` sin actualizar los notebooks.
+- No subir `.env` a GitHub o GitLab.
+- Abrir `KOAJ.pbix` después de completar la preparación de los datos.
 
-This is the **data**.
+## Solución de problemas frecuentes
 
-> The business has a high geographic concentration in that market.
+### Error de conexión a PostgreSQL
 
-This is the **interpretation**.
-
-> Inventory and commercial campaigns could prioritize that market while testing growth strategies in secondary cities.
-
-This is the **possible decision**.
-
-The final conclusions must be based on the actual results obtained in Power BI.
-
----
-
-## Academic Deliverables
-
-The project is organized around the following deliverables:
-
-- Dataset source
-- Dataset description
-- Pipeline diagram
-- Python/pandas ETL notebooks
-- PostgreSQL tables and load evidence
-- Power BI dashboard
-- Business questions and answers
-- Final conclusions and insights
-
----
-
-## Academic Context
-
-Academic project for practice of the RIWI Data Engineering performance test.
-
-The objective is to demonstrate the complete flow:
+Verificar:
 
 ```text
-RAW DATA
-   ↓
-EXTRACT
-   ↓
-TRANSFORM
-   ↓
-VALIDATE
-   ↓
-NORMALIZE
-   ↓
-POSTGRESQL
-   ↓
-POWER BI
-   ↓
-BUSINESS INSIGHTS
+DB_USER
+MI_CONTRA
+DB_HOST
+DB_PORT
+DB_NAME
 ```
+
+y confirmar que el servicio de PostgreSQL esté activo.
+
+### Error `ModuleNotFoundError`
+
+Activar el entorno virtual y reinstalar las dependencias:
+
+```bash
+# Windows
+.\env\Scripts\activate
+
+# Linux / macOS
+source env/bin/activate
+
+pip install -r requirements.txt
+```
+
+### El notebook no encuentra el CSV
+
+Comprobar que exista:
+
+```text
+data/raw/ventas_raw.csv
+```
+
+y que el notebook se esté ejecutando desde el directorio correcto del proyecto.
+
+### Power BI no puede actualizar los datos
+
+Verificar que:
+
+- PostgreSQL esté disponible;
+- la base de datos `koaj_ventas` exista;
+- las tablas hayan sido cargadas por `04_CargarSQL.ipynb`;
+- la conexión configurada en Power BI corresponda al entorno local.
+
+## Archivos de documentación
+
+La carpeta `doc/` contiene los documentos asociados al proyecto:
+
+| Archivo | Descripción |
+|---|---|
+| `Documento_Diseño_Software_KOAJ.docx` | Documento de diseño del sistema |
+| `Esquema Pipeline.pdf` | Representación del flujo del proceso |
+| `KOAJ.pbix` | Dashboard interactivo de Power BI |
+
+## Resultado esperado
+
+Al finalizar la ejecución, el proyecto debe contar con:
+
+1. Un dataset limpio.
+2. Tablas dimensionales preparadas.
+3. Una tabla de hechos con las transacciones.
+4. La base de datos cargada en PostgreSQL.
+5. El modelo analítico disponible en Power BI.
+6. Un dashboard funcional para el análisis comercial.
+
+## Contexto académico
+
+Proyecto académico de análisis y procesamiento de datos, desarrollado para practicar un flujo completo de ingeniería y analítica de datos: **preparación, transformación, modelado, almacenamiento y visualización de información para la toma de decisiones**.

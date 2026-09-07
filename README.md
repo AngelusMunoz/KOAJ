@@ -58,7 +58,7 @@ KOAJ/
 │   ├── raw/
 │   │   └── ventas_raw.csv        # Dataset original
 │   │
-│   └── processed/
+│   └── processed/                # Almacen de Dataset transformados (Crear uno)
 │       ├── ventas_limpio.csv     # Dataset después de la limpieza
 │       ├── fact_ventas.csv       # Tabla de hechos
 │       ├── dim_cliente.csv       # Dimensión de clientes
